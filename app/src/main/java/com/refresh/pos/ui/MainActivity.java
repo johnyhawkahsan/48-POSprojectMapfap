@@ -294,8 +294,7 @@ class PagerAdapter extends FragmentStatePagerAdapter {
 		
 		UpdatableFragment reportFragment = new ReportFragment();
 		UpdatableFragment saleFragment = new SaleFragment(reportFragment);
-		UpdatableFragment inventoryFragment = new InventoryFragment(
-				saleFragment);
+		UpdatableFragment inventoryFragment = new InventoryFragment(saleFragment);
 
 		fragments = new UpdatableFragment[] { inventoryFragment, saleFragment,
 				reportFragment };

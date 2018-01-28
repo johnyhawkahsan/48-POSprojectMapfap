@@ -1,5 +1,7 @@
 package com.refresh.pos.domain.sale;
 
+import android.util.Log;
+
 import com.refresh.pos.domain.DateTimeStrategy;
 import com.refresh.pos.domain.inventory.Inventory;
 import com.refresh.pos.domain.inventory.LineItem;
@@ -7,6 +9,7 @@ import com.refresh.pos.domain.inventory.Product;
 import com.refresh.pos.domain.inventory.Stock;
 import com.refresh.pos.techicalservices.NoDaoSetException;
 import com.refresh.pos.techicalservices.sale.SaleDao;
+import com.refresh.pos.ui.inventory.InventoryFragment;
 
 /**
  * Handles all Sale processes.
@@ -15,6 +18,9 @@ import com.refresh.pos.techicalservices.sale.SaleDao;
  *
  */
 public class Register {
+
+    private final static String LOG_TAG = Register.class.getCanonicalName();
+
 	private static Register instance = null;
 	private static SaleDao saleDao = null;
 	private static Stock stock = null;
@@ -36,9 +42,11 @@ public class Register {
 	public static boolean isDaoSet() {
 		return saleDao != null;
 	}
-	
+
+	//Method getInstance() when called creates a new register.
 	public static Register getInstance() throws NoDaoSetException {
-		if (instance == null) instance = new Register();
+		if (instance == null)
+			instance = new Register();
 		return instance;
 	}
 
@@ -73,11 +81,15 @@ public class Register {
 		if (currentSale == null)
 			initiateSale(DateTimeStrategy.getCurrentTime());
 		
-		LineItem lineItem = currentSale.addLineItem(product, quantity);
-		
+		LineItem lineItem = currentSale.addLineItem(product, quantity); //currentSale is an instance of Sale.java. There, we have List<LineItem> items, in which all items are stored.
+
+        //When line item is added first, it does not have any id. No id returns -1, so we check if it does not have any id, we setId according to currentSale.getId()
 		if (lineItem.getId() == LineItem.UNDEFINED) {
 			int lineId = saleDao.addLineItem(currentSale.getId(), lineItem);
 			lineItem.setId(lineId);
+
+            Log.i(LOG_TAG, "id of lineItem is set to : " + lineId);
+
 		} else {
 			saleDao.updateLineItem(currentSale.getId(), lineItem);
 		}
@@ -133,7 +145,8 @@ public class Register {
 	 * @return true if there is a current Sale; otherwise false.
 	 */
 	public boolean hasSale(){
-		if(currentSale == null)return false;
+		if(currentSale == null)
+		    return false;
 		return true;
 	}
 	

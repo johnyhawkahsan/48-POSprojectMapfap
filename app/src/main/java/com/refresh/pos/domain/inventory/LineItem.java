@@ -37,8 +37,7 @@ public class LineItem {
 	 * @param quantity product quantity of this LineItem.
 	 * @param unitPriceAtSale unit price at sale time. default is price from ProductCatalog.
 	 */
-	public LineItem(int id, Product product, int quantity,
-			double unitPriceAtSale) {
+	public LineItem(int id, Product product, int quantity, double unitPriceAtSale) {
 		this.id = id;
 		this.product = product;
 		this.quantity = quantity;

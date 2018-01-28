@@ -20,7 +20,7 @@ public class Sale {
 	private String startTime;
 	private String endTime;
 	private String status;
-	private List<LineItem> items;
+	private List<LineItem> items; //Stores all items added to sale.
 	
 
 	public Sale(int id, String startTime) {
@@ -93,7 +93,7 @@ public class Sale {
 	public double getTotal() {
 		double amount = 0;
 		for(LineItem lineItem : items) {
-			amount += lineItem.getTotalPriceAtSale();
+			amount += lineItem.getTotalPriceAtSale(); //x += y; is equivalent to x = x + y;
 		}
 		return amount;
 	}

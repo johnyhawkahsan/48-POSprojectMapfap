@@ -96,6 +96,7 @@ public class SaleFragment extends UpdatableFragment {
 			}
 		});
 
+		//Done button.
 		endButton.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -118,6 +119,28 @@ public class SaleFragment extends UpdatableFragment {
 			} 
 		});
 	}
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        update();
+    }
+
+    //Update method is called after item is selected from Inventory for Sale.
+    @Override
+    public void update() {
+        //hasSale() in Register class simply checks if Sale instance object in Register is null.
+        if(register.hasSale()){
+            showList(register.getCurrentSale().getAllLineItem()); //We call register's method getCurrentSale(), which return instance of Sale.java within Register, and then we call getAllLineItem() method of Sale, which returns the List<LineItem> items for us.
+            totalPrice.setText(register.getTotal() + ""); //In Register, getTotal method returns currentSale.getTotal(). In Sale class's getTotal(), calls method in LineItem getTotalPriceAtSale(), which return return unitPriceAtSale * quantity;
+        }
+
+        else{
+            //Create new array list if register/sale is empty, and set text to 0.00
+            showList(new ArrayList<LineItem>());
+            totalPrice.setText("0.00");
+        }
+    }
 	
 	/**
 	 * Show list
@@ -125,14 +148,14 @@ public class SaleFragment extends UpdatableFragment {
 	 */
 	private void showList(List<LineItem> list) {
 		
-		saleList = new ArrayList<Map<String, String>>();
-		for(LineItem line : list) {
-			saleList.add(line.toMap());
+		saleList = new ArrayList<Map<String, String>>();//We initialize our saleList ArrayList here.
+		for(LineItem line : list) { //Loop through List of LineItem's we received from Sale.java getAllLineItem() method and add each and every line to our saleList
+			saleList.add(line.toMap());// Line 1, Line 2, Line 3 ..... all lines are added to saleList, and also converted from LineItem toMap, by calling toMap method in LineItem class.
 		}
-		
+
+
 		SimpleAdapter sAdap;
-		sAdap = new SimpleAdapter(getActivity().getBaseContext(), saleList,
-				R.layout.listview_lineitem, new String[]{"name","quantity","price"}, new int[] {R.id.name,R.id.quantity,R.id.price});
+		sAdap = new SimpleAdapter(getActivity().getBaseContext(), saleList, R.layout.listview_lineitem, new String[]{"name","quantity","price"}, new int[] {R.id.name,R.id.quantity,R.id.price});
 		saleListView.setAdapter(sAdap);
 	}
 
@@ -180,23 +203,9 @@ public class SaleFragment extends UpdatableFragment {
 		newFragment.show(getFragmentManager(), "");
 	}
 
-	@Override
-	public void update() {
-		if(register.hasSale()){
-			showList(register.getCurrentSale().getAllLineItem());
-			totalPrice.setText(register.getTotal() + "");
-		}
-		else{
-			showList(new ArrayList<LineItem>());
-			totalPrice.setText("0.00");
-		}
-	}
+
 	
-	@Override
-	public void onResume() {
-		super.onResume();
-		update();
-	}
+
 	
 	/**
 	 * Show confirm or clear dialog.

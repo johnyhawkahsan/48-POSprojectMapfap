@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,6 +48,8 @@ import com.refresh.pos.ui.component.UpdatableFragment;
 @SuppressLint("ValidFragment")
 public class InventoryFragment extends UpdatableFragment {
 
+    private final static String LOG_TAG = InventoryFragment.class.getCanonicalName();
+
 	protected static final int SEARCH_LIMIT = 0;
 	private ListView inventoryListView;
 	private ProductCatalog productCatalog;
@@ -72,8 +75,7 @@ public class InventoryFragment extends UpdatableFragment {
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
 		try {
 			productCatalog = Inventory.getInstance().getProductCatalog();
@@ -104,7 +106,7 @@ public class InventoryFragment extends UpdatableFragment {
 
 		addProductButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				showPopup(v);
+				showPopup(v); //run popup method to launch AddProductDialogFragment
 			}
 		});
 
@@ -122,7 +124,9 @@ public class InventoryFragment extends UpdatableFragment {
 			public void onItemClick(AdapterView<?> myAdapter, View myView, int position, long mylng) {
 				int id = Integer.parseInt(inventoryList.get(position).get("id").toString());
 
-				register.addItem(productCatalog.getProductById(id), 1);
+                Log.i(LOG_TAG, "id of clicked item is: " + id);
+
+				register.addItem(productCatalog.getProductById(id), 1); //TODO: AHSAN: Here we add clicked product to our Register, Register has active items
 				saleFragment.update();
 				viewPager.setCurrentItem(1);
 			}     
